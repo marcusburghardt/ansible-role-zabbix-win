@@ -23,5 +23,6 @@
         dns: "{{ ansible_facts['fqdn']|lower }}"
         port: 10050
   # This could change between templates
+  changed_when: true
   notify: ensure conf-file
 ...
