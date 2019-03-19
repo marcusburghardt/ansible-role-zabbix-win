@@ -32,9 +32,9 @@ default_host_groups:
 default_templates:
   - Template OS Windows
 
-# Only this extra templates and their respective inventory groups will be processed
+# Only this extra templates and their respective inventory groups will be processed. Observe the first letter of True or False (uppercase).
 available_templates:
-  - { name: "windows-default", enabled: true }
-  - { name: "windows-wsus", enabled: true }
-  - { name: "windows-hyperv", enabled: true }
+  - { name: "windows-default", enabled: True }
+  - { name: "windows-wsus", enabled: True }
+  - { name: "windows-hyperv", enabled: True }
 ...
