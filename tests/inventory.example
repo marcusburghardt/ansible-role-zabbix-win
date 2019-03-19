@@ -1,0 +1,43 @@
+# Ansible Server. Usado para notificações.
+# Implicit groups: 'all' and 'ungrouped'
+#
+# For Windows hosts, set manually the "ipv4" var, for Zabbix Agent.
+
+# Used for download agent and run command to Zabbix API
+[ansible-server]
+10.1.10.167
+
+# General Linux. Use this child group to centralize the connections configurations, set in var/windows.yml
+[linux:children]
+ansible-server
+
+# Put all Windows Hosts Together. Playbook uses this group to install core agent.
+# Groups not here will be ignored.
+[zabbix-win:children]
+windows-wsus
+
+# General Windows. Use this child group to centralize the connections configurations, set in var/windows.yml
+[windows:children]
+windows-wsus
+
+# TEMPLATES AND GROUPS. REPEAT THE WINDOWS HOST WHERE NEEDED.
+# Default Windows Server whitout extra templates.
+[windows-default]
+
+# Terminal Service Hosts. Playbook uses this group to sign the Terminal Service Template.
+[windows-ts]
+ts1.domain.com
+
+# WSUS Hosts. Playbook uses this group to sign the Terminal Service Template.
+[windows-wsus]
+wsus.domain.com
+
+# HyperV Hosts. Playbook uses this group to sign the HyperV Template.
+[windows-hyperv:children]
+hyperv-cluster
+
+# CUSTOM HOSTS
+# Custom HyperV Clusters to better control. Put this groups in "windows-hyperv" to assiciate the right template.
+[hyperv-cluster]
+10.1.12.13 ipv4=10.1.12.13
+10.1.12.14 ipv4=10.1.12.14

@@ -1,0 +1,12 @@
+---
+# This approach leaves the code more dynamic.
+# You just need control everything by default/main.yml and vars (only if developing something new).
+
+- name: "{{ role_name }} | Load vars for {{ object.name }}"
+  include_vars: "{{ object.name }}.yml"
+  when: object.name in group_names
+
+- name: "{{ role_name }} | Load tasks for {{ object.name }}"
+  include_tasks: "{{ object.name }}.yml"
+  when: object.name in group_names
+...

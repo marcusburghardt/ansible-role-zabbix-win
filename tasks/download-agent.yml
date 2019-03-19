@@ -1,0 +1,7 @@
+---
+- name: Downloading Windows Agent.
+  get_url:
+    url: "{{ agent_windows_download }}"
+    dest: "{{ agent_windows_dest }}"
+    mode: 0444
+...

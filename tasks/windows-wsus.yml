@@ -1,0 +1,27 @@
+---
+- name: Sign "{{ extra_conf_name }}" Template
+  local_action:
+    module: zabbix_host
+    server_url: '{{ zabbix_api_protocol }}://{{ zabbix_server }}'
+    login_user: '{{ zabbix_username }}'
+    login_password: '{{ zabbix_password }}'
+    validate_certs: '{{ zabbix_validate_certs }}'
+    host_name: "{{ ansible_facts['fqdn']|lower }}"
+    visible_name: "{{ ansible_facts['fqdn']|lower }}"
+    description: '{{ zabbix_host_description }}'
+    host_groups: '{{ host_groups }}'
+    link_templates: '{{ templates }}'
+    status: enabled
+    state: present
+    inventory_mode: '{{ zabbix_host_inventory_mode }}'
+    interfaces:
+      - type: agent
+        main: 1
+        useip: 0
+        # Windows is poor in give informations like default ipv4. So, we use inventory vars.
+        #ip: '{{ ipv4 }}'
+        dns: "{{ ansible_facts['fqdn']|lower }}"
+        port: 10050
+  # This could change between templates
+  notify: ensure conf-file
+...

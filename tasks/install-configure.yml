@@ -1,0 +1,76 @@
+---
+- name: Ensuring the presence of MBSEC working folder
+  win_file:
+    path: '{{ mbsec_win_working_folder }}'
+    state: directory
+
+- name: Obtaining information about an existing Zabbix folder
+  win_stat:
+    path: '{{ zabbix_folder }}'
+  register: result_pre_zabbix_folder
+
+- name: Obtaining information about an existing valid backup folder
+  win_stat:
+    path: "{{ mbsec_win_working_folder }}bkp_{{ ansible_facts['date_time']['date'] }}"
+  register: result_pre_zabbix_bkp_folder
+
+- name: Backup of the existing Zabbix folder
+  win_copy:
+    remote_src: yes
+    src: '{{ zabbix_folder }}'
+    dest: "{{ mbsec_win_working_folder }}bkp_{{ ansible_facts['date_time']['date'] }}"
+  when: result_pre_zabbix_folder.stat.exists and not result_pre_zabbix_bkp_folder.stat.exists
+
+# This file will be there for history and auditing. So, I wont delete it automatically.
+- name: Copiyng the new zip file of Zabbix Agent to host
+  win_copy:
+    remote_src: no
+    src: '{{ agent_windows_dest }}'
+    dest: '{{ mbsec_win_working_folder }}'
+
+- name: Checking if the Zabbix Agent service exists
+  win_service:
+    name: "Zabbix Agent"
+  register: result_zabbix_service
+
+- name: Stopping the Zabbix Agent service
+  win_service:
+    name: "Zabbix Agent"
+    state: stopped
+  when: result_zabbix_service.exists
+
+- name: Unziping the new Zabbix Agent to {{ zabbix_folder }}
+  win_unzip:
+    src: '{{ mbsec_win_working_folder }}{{ agent_windows_file }}'
+    dest: '{{ zabbix_folder }}'
+
+- name: Create the config file with the best and standard settings
+  win_template:
+    src: zabbix_agentd.win.conf.j2
+    dest: '{{ zabbix_folder }}/conf/zabbix_agentd.win.conf'
+
+- name: Ensuring the presence of Zabbix Agent Extra folders
+  win_file:
+    path: '{{ zabbix_folder }}/{{ item }}'
+    state: directory
+  loop: '{{ extra_folders }}'
+
+- name: Ensuring the firewall rule for Zabbix Agent communication (10050/tcp)
+  win_firewall_rule:
+    name: "Zabbix Agent"
+    localport: 10050
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes  
+
+- name: Install and start the Zabbix Agent service
+  win_service:
+    name: '{{ zabbix_service_name }}'
+    path: '{{ zabbix_folder }}\bin\zabbix_agentd.exe --config {{ zabbix_folder }}\conf\zabbix_agentd.win.conf'
+    start_mode: auto
+    state: started
+    username: LocalSystem
+    description: Zabbix Agent installed by MBSEC Ansible.
+...

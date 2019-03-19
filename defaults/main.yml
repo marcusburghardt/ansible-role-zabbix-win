@@ -1,0 +1,40 @@
+---
+mbsec_win_working_folder: "C:\\MBSEC\\"
+
+# Zabbix Agent
+agent_windows_download: "https://www.zabbix.com/downloads/4.0.4/zabbix_agents-4.0.4-win-amd64-openssl.zip"
+agent_windows_dest: "/tmp/zabbix_agents-4.0.4-win-amd64-openssl.zip"
+agent_windows_file: "zabbix_agents-4.0.4-win-amd64-openssl.zip"
+zabbix_folder: "C:\\zabbix"
+zabbix_folder_bkp: "{{ mbsec_win_working_folder }}bkp_{{ ansible_facts['date_time']['date'] }}"
+zabbix_service_name: "Zabbix Agent"
+zabbix_host_description: Host automatically added or updated by MBSEC Ansible approach at {{ ansible_facts['date_time']['date'] }}
+zabbix_host_inventory_mode: automatic
+
+# Zabbix Server
+zabbix_api_protocol: http
+zabbix_server: monitoramento.pia.com.br
+zabbix_username: Admin
+zabbix_password: SOpia!7514*
+zabbix_validate_certs: no
+
+# Extra standard folders for Templates and Organization.
+extra_folders:
+  - logs
+  - zabbix_agentd.conf.d
+  - scripts
+
+# This is the default Host Groups and Templates for Windows Hosts out of any other category.
+# Change this if you changed the Zabbix Defaults.
+default_host_groups:
+  - Windows Servers
+
+default_templates:
+  - Template OS Windows
+
+# Only this extra templates and their respective inventory groups will be processed
+available_templates:
+  - { name: "windows-default", enabled: true }
+  - { name: "windows-wsus", enabled: true }
+  - { name: "windows-hyperv", enabled: true }
+...

@@ -1,0 +1,16 @@
+---
+# This file has the custom configurations for:
+# windows-wsus
+
+internal_template_name: windows-wsus
+extra_conf_name: WSUS
+extra_conf_file: wsus_miner.conf
+extra_script_files: 
+  - wsus_miner.ps1
+extra_custom_groups: []
+extra_custom_templates:
+  - Template MBSEC - Microsoft WSUS
+
+host_groups: "{{ default_host_groups + extra_custom_groups }}"
+templates: "{{ default_templates + extra_custom_templates }}"
+...

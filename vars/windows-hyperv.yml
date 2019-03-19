@@ -1,0 +1,16 @@
+---
+# This file has the custom configurations for:
+# windows-hyperv
+
+internal_template_name: windows-hyperv
+extra_conf_name: HYPERV
+extra_conf_file: []
+extra_script_file: []
+extra_custom_groups:
+  - Hypervisors
+extra_custom_templates:
+  - Template_Windows_HyperV_Host
+
+host_groups: "{{ default_host_groups + extra_custom_groups }}"
+templates: "{{ default_templates + extra_custom_templates }}"
+...

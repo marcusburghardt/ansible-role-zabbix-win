@@ -1,0 +1,14 @@
+---
+# This file has the custom configurations for:
+# windows-default
+
+internal_template_name: windows-default
+extra_conf_name: DEFAULT
+extra_conf_file: []
+extra_script_files: []
+extra_custom_groups: []
+extra_custom_templates: []
+
+host_groups: "{{ default_host_groups + extra_custom_groups }}"
+templates: "{{ default_templates + extra_custom_templates }}"
+...

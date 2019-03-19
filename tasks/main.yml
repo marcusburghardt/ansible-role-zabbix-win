@@ -1,0 +1,16 @@
+---
+# General and common requirement
+- name: zabbix-win | Download Agent
+  include_tasks: download-agent.yml
+  when: inventory_hostname in groups['ansible-server']
+
+- name: zabbix-win | Install and Configure Agent
+  include_tasks: install-configure.yml
+  when: inventory_hostname in groups['zabbix-win']
+
+# Call the extra tasks
+- name: Include Extras Templates or Host Groups
+  include: extras.yml object="{{ item }}"
+  loop: "{{ available_templates }}"
+  when: object.enabled == True
+...

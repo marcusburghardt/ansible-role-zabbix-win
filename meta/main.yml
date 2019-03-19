@@ -1,0 +1,22 @@
+galaxy_info:
+  author: Marcus Burghardt
+  description: Role for install and configure Zabbix Win agents in a very organized way.
+  company: MBSEC
+  license: MIT
+  min_ansible_version: 2.4
+  min_ansible_container_version: 2.4
+  platforms:
+    - name: CentOS
+      versions:
+        - 7
+    - name: Windows
+      versions:
+        - 2012
+        - 2012 R2
+        - 2016
+        - 2019
+  galaxy_tags:
+    - zabbix
+    - windows
+    - monitoring
+dependencies: []

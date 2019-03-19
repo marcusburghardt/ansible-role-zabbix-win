@@ -1,0 +1,20 @@
+---
+# Here are some common and eventual tasks. The best aproach for each of them is to be a handler.
+- name: restart zabbix-agent
+  service: name={{ zabbix_service_name }} state=restarted
+
+# There aren't necessary more than one config file for the custom items.
+- name: ensure conf-file
+  win_copy:
+    src: '{{ internal_template_name }}/{{ extra_conf_file }}'
+    dest: '{{ zabbix_folder }}/zabbix_agentd.conf.d/{{ extra_conf_file }}'
+  notify: ensure script-files
+
+# But for scripts, you can have more. For instance, one for discovery and other to collect data.
+- name: ensure script-files
+  win_copy:
+    src: '{{ internal_template_name }}/{{ item }}'
+    dest: '{{ zabbix_folder }}/scripts/{{ item  }}'
+  loop: "{{ extra_script_files }}"
+  notify: restart zabbix-agent
+...
