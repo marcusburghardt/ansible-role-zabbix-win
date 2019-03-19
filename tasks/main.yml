@@ -12,5 +12,5 @@
 - name: Include Extras Templates or Host Groups
   include: extras.yml object="{{ item }}"
   loop: "{{ available_templates }}"
-  when: object.enabled == True
+  when: object.enabled
 ...
