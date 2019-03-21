@@ -63,7 +63,7 @@
     direction: in
     protocol: tcp
     state: present
-    enabled: yes  
+    enabled: yes
 
 - name: Install and start the Zabbix Agent service
   win_service:
